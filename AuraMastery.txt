@@ -1,0 +1,43 @@
+﻿## Title: AuraMastery
+## Description: This addon displays auras (icons, progression bars, textures, text labels, etc.) based on player defined conditions.
+## Author: Letho
+## Version: 1.20
+## APIVersion: 100029 10030
+## DependsOn: LibStub LibAddonMenu-2.0
+## OptionalDependsOn: AceSerializer-3.0
+## SavedVariables: AuraMasterySavedVariables
+##
+## This Add-on is not created by, affiliated with or sponsored by ZeniMax Media Inc. or its affiliates. 
+## The Elder Scrolls® and related logos are registered trademarks or trademarks of ZeniMax Media Inc. in the United States and/or other countries. 
+## All rights reserved
+##
+## You can read the full terms at https://account.elderscrollsonline.com/add-on-terms
+
+libs\LibStub\LibStub.lua
+libs\AceSerializer-3.0\AceSerializer-3.0.lua
+libs\LibAddonMenu-2.0\LibAddonMenu-2.0.lua
+libs\LibAddonMenu-2.0\controls\panel.lua
+libs\LibAddonMenu-2.0\controls\submenu.lua
+libs\LibAddonMenu-2.0\controls\button.lua
+libs\LibAddonMenu-2.0\controls\checkbox.lua
+libs\LibAddonMenu-2.0\controls\colorpicker.lua
+libs\LibAddonMenu-2.0\controls\iconpicker.lua
+libs\LibAddonMenu-2.0\controls\custom.lua
+libs\LibAddonMenu-2.0\controls\description.lua
+libs\LibAddonMenu-2.0\controls\dropdown.lua
+libs\LibAddonMenu-2.0\controls\editbox.lua
+libs\LibAddonMenu-2.0\controls\header.lua
+libs\LibAddonMenu-2.0\controls\slider.lua
+libs\LibAddonMenu-2.0\controls\texture.lua
+AuraMastery.lua
+defaults.lua
+Functions.lua
+Icons.lua
+Controls.lua
+AddonMenu.lua
+prototriggers.lua
+prototypes.lua
+codes.lua
+debugger.lua
+Virtuals.xml
+AddonMenu.xml

@@ -1,0 +1,979 @@
+<GuiXml>
+	<Controls>
+
+		<!-- Generic Aura Anchor -->
+		<TopLevelControl name="AM_GenericAnchor" hidden="true" level="2" clampedToScreen="true">
+			<Dimensions x="12" y="12" />
+			<Anchor point="TOPLEFT" relativeTo="AuraMasteryTLW" anchorPoint="TOPLEFT" />
+			<Controls>
+				<Backdrop name="$(parent)_Backdrop" centerColor="FF00FF00" edgeColor="FF000000">
+					<AnchorFill />
+					<Edge edgeSize="1" /> 
+				</Backdrop>
+				<Label name="$(parent)_LabelCoords" font="$(BOLD_FONT)|16|soft-shadow-thin" color="00FF00" text="400,400">
+					<Anchor point="TOP" relativeTo="$(parent)" anchorPoint="TOP" offsetY="-20" />	
+				</Label>
+			</Controls>
+			<OnMoveStop>
+				local offsetX = self:GetLeft()
+				local offsetY = self:GetTop()
+				local activeAura = AuraMastery.activeAura
+				AuraMastery:SaveAuraPosX(activeAura, offsetX)
+				AuraMastery:SaveAuraPosY(activeAura, offsetY)
+				AuraMasteryDisplayMenu_AuraPosXSubControl_Editbox:SetText(offsetX)
+				AuraMasteryDisplayMenu_AuraPosYSubControl_Editbox:SetText(offsetY)
+			</OnMoveStop>
+		</TopLevelControl>
+	
+		<TopLevelControl name="AuraMasteryHiddenControls" hidden="true" />	
+
+		<TopLevelControl name="AuraMasteryExportWindow" clampedToScreen="true" mouseEnabled="true" tier="1" layer="2" hidden="true">	<!-- Draw Tier 2 = High, 1 = medium, 0 = low, 999 = max value(?) -->
+			<Dimensions x="800" y="450" />
+			<Anchor point="CENTER" relativeTo="GuiRoot" relativePoint="CENTER" />
+			<Controls>
+				<Backdrop name="$(parent)_Backdrop" inherits="ZO_DefaultBackdrop" />
+				<Label name="$(parent)_Label" font="$(BOLD_FONT)|18|soft-shadow-thin" color="C5C29E">
+					<Anchor point="TOP" relativeTo="$(parent)" anchorPoint="TOP" offsetY="6" />
+				</Label>
+				<Button name="AuraMasteryExportWindowCloseButton" inherits="ZO_CloseButton">
+					<OnClicked>self:GetParent():SetHidden(true)</OnClicked>
+				</Button>
+				<!-- Editbox Export -->
+				<Control name="ExportEditboxCaption">
+					<Dimensions x="792" y="414" />
+					<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="4" offsetY="32" />
+					<Controls>
+						<Backdrop name="$(parent)_Backdrop" centerColor="66000000" edgeColor="1F1F1F">
+							<AnchorFill />
+							<Edge edgeSize="1" />
+							<Controls>
+								<EditBox name="ExportEditbox" font="$(BOLD_FONT)|14|soft-shadow-thin" mouseEnabled="true" maxInputCharacters="100000" editEnabled="false" multiLine="true">
+									<AnchorFill />
+									<OnMouseDown>
+										AuraMastery:EditBoxOnMouseDown(self)
+									</OnMouseDown>
+									<OnFocusLost>
+										AuraMastery:EditBoxOnFocusLost(self)
+									</OnFocusLost>
+								</EditBox>
+							</Controls>
+						</Backdrop>
+					</Controls>
+				</Control>
+				<!-- /Editbox Export -->
+			</Controls>
+		</TopLevelControl>
+
+		<TopLevelControl name="AuraMasteryImportWindow" clampedToScreen="true" mouseEnabled="true" movable="true" tier="1" layer="2" hidden="true">	<!-- Draw Tier 2 = High, 1 = medium, 0 = low, 999 = max value(?) -->
+			<Dimensions x="800" y="450" />
+				<Anchor point="CENTER" relativeTo="GuiRoot" relativePoint="CENTER" />
+			<Controls>
+				<Backdrop name="$(parent)_Backdrop" inherits="ZO_DefaultBackdrop" />
+				<Label name="$(parent)_Label" font="$(BOLD_FONT)|18|soft-shadow-thin" color="C5C29E" text="Import aura">
+					<Anchor point="TOP" relativeTo="$(parent)" anchorPoint="TOP" offsetY="6" />
+				</Label>
+				<Button name="AuraMasteryImportWindowCloseButton" inherits="ZO_CloseButton">
+					<OnClicked>self:GetParent():SetHidden(true)</OnClicked>
+				</Button>
+				<Control name="ImportEditboxControl">
+					<Dimensions x="792" y="342" />
+					<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="4" offsetY="32" />
+					<Controls>
+						<Backdrop name="$(parent)_Backdrop" centerColor="66000000" edgeColor="1F1F1F">
+							<AnchorFill />
+							<Edge edgeSize="1" />
+							<Controls>
+								<EditBox name="ImportEditbox" font="$(BOLD_FONT)|14|soft-shadow-thin" mouseEnabled="true" maxInputCharacters="100000" multiLine="true" newLineEnabled="true">
+									<AnchorFill />
+									<OnMouseDown>
+										AuraMastery:EditBoxOnMouseDown(self)
+									</OnMouseDown>
+									<OnFocusLost>
+										AuraMastery:EditBoxOnFocusLost(self)
+									</OnFocusLost>
+									<OnMouseEnter>
+										AuraMastery:EditBoxOnMouseEnter(self)
+									</OnMouseEnter>
+									<OnMouseExit>
+										AuraMastery:EditBoxOnMouseExit(self)
+									</OnMouseExit>
+								</EditBox>
+							</Controls>
+						</Backdrop>
+					</Controls>
+				</Control>
+				<Label name="$(parent)_NotificationLabel" font="$(BOLD_FONT)|16|soft-shadow-thin">
+					<Anchor point="BOTTOMLEFT" relativeTo="$(parent)" anchorPoint="BOTTOMLEFT" offsetX="5" offsetY="-39" />
+				</Label>
+				<Button name="ImportActionButton" inherits="ZO_DefaultButton" text="Import">
+					<Dimensions x="292" y="30" />
+					<Anchor point="BOTTOM" relativeTo="$(parent)" relativePoint="BOTTOM" offsetY="-3" />
+					<OnClicked>
+							AuraMastery:ImportAura()
+					</OnClicked>
+				</Button>
+			</Controls>
+		</TopLevelControl>
+
+		<TopLevelControl name="AuraMasteryTriggerEventsWindow" clampedToScreen="true" mouseEnabled="true" movable="true" tier="1" layer="2" hidden="true">	<!-- Draw Tier 2 = High, 1 = medium, 0 = low, 999 = max value(?) -->
+			<Dimensions x="500" y="450" />
+				<Anchor point="CENTER" relativeTo="GuiRoot" relativePoint="CENTER" />
+			<Controls>
+				<Backdrop name="$(parent)_Backdrop" inherits="ZO_DefaultBackdrop" />
+				<Label name="$(parent)_Label" font="$(BOLD_FONT)|18|soft-shadow-thin" color="C5C29E" text="Trigger Events">
+					<Anchor point="TOP" relativeTo="$(parent)" anchorPoint="TOP" offsetY="6" />
+				</Label>
+				<Button name="$(parent)_CloseButton" inherits="ZO_CloseButton">
+					<OnClicked>self:GetParent():SetHidden(true)</OnClicked>
+				</Button>
+				
+				<!-- Event Controls are created in lua (auramenu.lua) -->
+				
+			</Controls>
+		</TopLevelControl>
+
+		<TopLevelControl name="AuraMasteryAuraTextWindow" clampedToScreen="true" mouseEnabled="true" movable="true" tier="1" layer="2" hidden="true">	<!-- Draw Tier 2 = High, 1 = medium, 0 = low, 999 = max value(?) -->
+			<OnInitialized>
+			
+				-- initialize position select
+				local m_comboBox = AuraTextPositionSubControl.m_comboBox
+				m_comboBox:SetSortsItems(false)
+				m_comboBox:SetSelectedItemFont("$(BOLD_FONT)|14|soft-shadow-thin")
+				local items = {}
+				table.insert(items, {name = "topleft", callback = AuraMastery.EditAuraTextPosition, internalValue = 1})
+				table.insert(items, {name = "top", callback = AuraMastery.EditAuraTextPosition, internalValue = 2})
+				table.insert(items, {name = "topright", callback = AuraMastery.EditAuraTextPosition, internalValue = 3})
+				table.insert(items, {name = "left", callback = AuraMastery.EditAuraTextPosition, internalValue = 4})
+				table.insert(items, {name = "right", callback = AuraMastery.EditAuraTextPosition, internalValue = 5})
+				table.insert(items, {name = "bottomleft", callback = AuraMastery.EditAuraTextPosition, internalValue = 6})
+				table.insert(items, {name = "bottom", callback = AuraMastery.EditAuraTextPosition, internalValue = 7})
+				table.insert(items, {name = "bottomright", callback = AuraMastery.EditAuraTextPosition, internalValue = 8})
+				AuraMastery:PopulateComboBoxCustom(m_comboBox, items, AuraMastery.EditAuraTextPosition)
+				
+				-- initialize textinfo select
+				local m_comboBox = AuraTextInfoSourceSubControl.m_comboBox
+				m_comboBox:SetSortsItems(false)
+				m_comboBox:SetSelectedItemFont("$(BOLD_FONT)|14|soft-shadow-thin")
+			</OnInitialized>
+			<Dimensions x="492" y="360" />
+			<Anchor point="BOTTOM" relativeTo="GuiRoot" relativePoint="BOTTOM" offsetY="-30" />
+			<Controls>
+				<Backdrop name="$(parent)_Backdrop" inherits="ZO_DefaultBackdrop" />
+				
+				<Label name="$(parent)_Label" font="$(BOLD_FONT)|18|soft-shadow-thin" color="C5C29E" text="Aura text">
+					<Anchor point="TOP" relativeTo="$(parent)" anchorPoint="TOP" offsetY="6" />
+				</Label>
+				
+				<Button name="$(parent)CloseButton" inherits="ZO_CloseButton">
+					<OnClicked>self:GetParent():SetHidden(true)</OnClicked>
+				</Button>
+				
+				<Control name="$(parent)EditBoxContainer">
+					<Dimensions x="340" y="200" />
+					<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetY="32" />
+					<Controls>
+						<Backdrop name="$(parent)_Backdrop" centerColor="66000000" edgeColor="1F1F1F">
+							<AnchorFill />
+							<Edge edgeSize="1" />
+							<Controls>
+								<EditBox name="AuraMasteryAuraText_TextBox" font="$(BOLD_FONT)|14|soft-shadow-thin" mouseEnabled="true" maxInputCharacters="100000" multiLine="true" newLineEnabled="true">
+									<AnchorFill />
+									<OnMouseDown>
+										AuraMastery:EditBoxOnMouseDown(self)
+									</OnMouseDown>
+									<OnFocusLost>
+										AuraMastery:EditBoxOnFocusLost(self)
+									</OnFocusLost>
+									<OnMouseEnter>
+										AuraMastery:EditBoxOnMouseEnter(self)
+									</OnMouseEnter>
+									<OnMouseExit>
+										AuraMastery:EditBoxOnMouseExit(self)
+									</OnMouseExit>
+								</EditBox>
+							</Controls>
+						</Backdrop>
+					</Controls>
+				</Control>
+				
+				<Control name="$(parent)LegendContainer" inherits="AM_TriggerControl">
+					<OnInitialized>
+						local label = self:GetNamedChild("_Label")
+						label:SetAnchor(TOPLEFT, self, TOPLEFT, 4, 3)
+						label:SetText("Replacer Legend:")
+					</OnInitialized>
+					<Dimensions x="150" y="200" />
+					<Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetY="32" />
+					<Controls>
+						<Label name="AuraMasteryAuraTextWindowLegendLabel" font="$(BOLD_FONT)|16|soft-shadow-thin">
+							<Anchor point="TOPLEFT" relativeTo="$(parent)" anchorPoint="TOPLEFT" offsetX="4" offsetY="10" />
+						</Label>
+					</Controls>
+				</Control>
+				
+				<Label name="$(parent)_NotificationLabel" font="$(BOLD_FONT)|16|soft-shadow-thin">
+					<Anchor point="BOTTOMLEFT" relativeTo="$(parent)" anchorPoint="BOTTOMLEFT" offsetY="-94" />
+				</Label>
+
+				<Control name="AuraTextFontSizeContainer" inherits="AM_TriggerControl">
+					<OnInitialized>
+						self:GetNamedChild("_Label"):SetText("Font size:")
+						AuraTextFontSizeSubControl_Editbox:SetHandler("OnEnter", function() AuraMastery.EditAuraTextFontSize(); end)
+					</OnInitialized>
+					<Dimensions x="210" y="28" />
+					<Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetY="-64" />
+					<Controls>
+						<Backdrop name="AuraTextFontSizeSubControl" inherits="AM_EditBox">
+							<Dimensions x="42" y="20" />
+							<Anchor point="RIGHT" relativeTo="$(parent)" relativePoint="RIGHT" offsetX="-4" />
+						</Backdrop>
+					</Controls>
+				</Control>
+				
+				<Control name="AuraTextFontColorContainer" inherits="AM_TriggerControl">
+					<OnInitialized>
+						self:GetNamedChild("_Label"):SetText("Font color:")
+						self.data = {}
+						local iconSelect = LAMCreateControl.colorpicker(self, {
+							type = "colorpicker",
+							name = "",
+							tooltip = "Select font color.",
+							getFunc = AuraMastery.GetAuraTextFontColor,
+							setFunc = AuraMastery.EditAuraTextFontColor,
+							reference = "AuraMasteryDisplayMenu_TextFontColorSelect"
+						})
+						iconSelect:ClearAnchors()
+						iconSelect:SetAnchor(RIGHT, self, RIGHT)
+						iconSelect:SetDrawTier(2)
+					</OnInitialized>
+					<Dimensions x="210" y="28" />
+					<Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetY="-34" />
+				</Control>
+				
+				<Control name="AuraTextPositionContainer" inherits="AM_TriggerControl">
+					<OnInitialized>
+						self:GetNamedChild("_Label"):SetText("Text position:")
+					</OnInitialized>
+					<Dimensions x="210" y="28" />
+					<Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetY="-4" />
+					<Controls>				
+						<Control name="AuraTextPositionSubControl" inherits="AM_ComboBox">
+							<Dimensions x="120" y="28" />
+							<Anchor point="RIGHT" relativeTo="$(parent)" relativePoint="RIGHT" offsetX="-4" />
+						</Control>
+					</Controls>
+				</Control>
+
+				<Control name="AuraTextInfoSourceContainer" inherits="AM_TriggerControl">
+					<OnInitialized>
+						self:GetNamedChild("_Label"):SetText("Textinfo Source:")
+					</OnInitialized>
+					<Dimensions x="210" y="28" />
+					<Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetY="236" />
+					<Controls>
+						<Control name="AuraTextInfoSourceSubControl" inherits="AM_ComboBox">
+							<Dimensions x="120" y="28" />
+							<Anchor point="RIGHT" relativeTo="$(parent)" relativePoint="RIGHT" offsetX="-4" />
+						</Control>
+					</Controls>
+				</Control>
+				
+				<Button name="SaveAuraText" inherits="ZO_DefaultButton" text="Save">
+					<Dimensions x="140" y="28" />
+					<Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="-4" offsetY="-4" />
+					<OnClicked>
+							AuraMastery:EditAuraText()
+					</OnClicked>
+				</Button>
+			</Controls>
+		</TopLevelControl>		
+				
+		<TopLevelControl name="AuraMasteryCustomTriggerActionResultsWindow" clampedToScreen="true" mouseEnabled="true" movable="true" tier="1" layer="2" hidden="true">	<!-- Draw Tier 2 = High, 1 = medium, 0 = low, 999 = max value(?) -->
+			<Dimensions x="500" y="450" />
+				<Anchor point="CENTER" relativeTo="GuiRoot" relativePoint="CENTER" offsetX="-258" offsetY="232" />
+			<Controls>
+				<Backdrop name="$(parent)_Backdrop" inherits="ZO_DefaultBackdrop" />
+				<Label name="$(parent)_Label" font="$(BOLD_FONT)|18|soft-shadow-thin" color="C5C29E" text="Custom Trigger Events">
+					<Anchor point="TOP" relativeTo="$(parent)" anchorPoint="TOP" offsetY="6" />
+				</Label>
+				<Button name="$(parent)_CloseButton" inherits="ZO_CloseButton">
+					<OnClicked>self:GetParent():SetHidden(true)</OnClicked>
+				</Button>
+				
+				<!-- Event Controls are created in lua (auramenu.lua) -->
+				
+			</Controls>
+		</TopLevelControl>
+		
+		<TopLevelControl name="AuraMasteryCustomUntriggerActionResultsWindow" clampedToScreen="true" mouseEnabled="true" movable="true" tier="1" layer="2" hidden="true">	<!-- Draw Tier 2 = High, 1 = medium, 0 = low, 999 = max value(?) -->
+			<Dimensions x="500" y="450" />
+				<Anchor point="CENTER" relativeTo="GuiRoot" relativePoint="CENTER" offsetX="258" offsetY="232" />
+			<Controls>
+				<Backdrop name="$(parent)_Backdrop" inherits="ZO_DefaultBackdrop" />
+				<Label name="$(parent)_Label" font="$(BOLD_FONT)|18|soft-shadow-thin" color="C5C29E" text="Custom Untrigger Events">
+					<Anchor point="TOP" relativeTo="$(parent)" anchorPoint="TOP" offsetY="6" />
+				</Label>
+				<Button name="$(parent)_CloseButton" inherits="ZO_CloseButton">
+					<OnClicked>self:GetParent():SetHidden(true)</OnClicked>
+				</Button>
+				
+				<!-- Event Controls are created in lua (auramenu.lua) -->
+				
+			</Controls>
+		</TopLevelControl>
+		
+		<TopLevelControl name="AuraMasteryCustomTriggerWindow" clampedToScreen="true" mouseEnabled="true" movable="true" tier="1" layer="2" hidden="true">	<!-- Draw Tier 2 = High, 1 = medium, 0 = low, 999 = max value(?) -->
+			<Dimensions x="500" y="450" />
+			<Anchor point="CENTER" relativeTo="GuiRoot" relativePoint="CENTER" offsetX="-258" offsetY="-232" />
+			<Controls>
+				<Backdrop name="$(parent)_Backdrop" inherits="ZO_DefaultBackdrop" />
+				<Label name="$(parent)_Label" font="$(BOLD_FONT)|18|soft-shadow-thin" color="C5C29E" text="Custom Trigger Settings">
+					<Anchor point="TOP" relativeTo="$(parent)" anchorPoint="TOP" offsetY="6" />
+				</Label>
+				<Button name="$(parent)_CloseButton" inherits="ZO_CloseButton">
+					<OnClicked>self:GetParent():SetHidden(true); AuraMastery.activeTriggerType = nil</OnClicked>
+				</Button>
+		
+				<!-- Custom trigger type section -->
+				<Control name="$(parent)TriggerTypeSelect">
+					<Dimensions x="400" y="28" />
+					<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetY="36" />
+					<Controls>
+						<Backdrop name="$(parent)_Backdrop" centerColor="0F0F0F" edgeColor="1FFFFFFF"> <!-- color: AlphaRedGreenBlue -->
+							<AnchorFill />
+							<Edge edgeSize="1" />
+						</Backdrop>														
+						<Label name="$(parent)_Label" font="$(BOLD_FONT)|14|soft-shadow-thin" color="C5C29E" text="Trigger type:">
+							<Anchor point="LEFT" relativeTo="$(parent)" anchorPoint="LEFT" offsetX="9" />	
+						</Label>
+						<Control name="$(parent)SubControl" inherits="AM_ComboBox">
+							<Dimensions x="315" y="20" />
+							<Anchor point="RIGHT" relativeTo="$(parent)" relativePoint="RIGHT" offsetX="-4" />
+						</Control>
+					</Controls>
+				</Control>
+				
+				<Control name="$(parent)DynamicControls">
+					<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" />
+					<Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" />
+				</Control>
+				
+			</Controls>
+			<OnInitialized>
+				AuraMastery:InitCustomTriggerTypeSelect()
+			</OnInitialized>
+		</TopLevelControl>
+
+		<TopLevelControl name="AuraMasteryCustomUntriggerWindow" clampedToScreen="true" mouseEnabled="true" movable="true" tier="1" layer="2" hidden="true">	<!-- Draw Tier 2 = High, 1 = medium, 0 = low, 999 = max value(?) -->
+			<Dimensions x="500" y="450" />
+				<Anchor point="CENTER" relativeTo="GuiRoot" relativePoint="CENTER" offsetX="258" offsetY="-232" />
+			<Controls>
+				<Backdrop name="$(parent)_Backdrop" inherits="ZO_DefaultBackdrop" />
+				<Label name="$(parent)_Label" font="$(BOLD_FONT)|18|soft-shadow-thin" color="C5C29E" text="Custom Untrigger Settings">
+					<Anchor point="TOP" relativeTo="$(parent)" anchorPoint="TOP" offsetY="6" />
+				</Label>
+				<Button name="$(parent)_CloseButton" inherits="ZO_CloseButton">
+					<OnClicked>self:GetParent():SetHidden(true); AuraMastery.activeTriggerType = nil</OnClicked>
+				</Button>
+				
+				<!-- Custom untrigger type section -->
+				<Control name="$(parent)UntriggerTypeSelect">
+					<Dimensions x="400" y="28" />
+					<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetY="36" />
+					<Controls>
+						<Backdrop name="$(parent)_Backdrop" centerColor="0F0F0F" edgeColor="1FFFFFFF"> <!-- color: AlphaRedGreenBlue -->
+							<AnchorFill />
+							<Edge edgeSize="1" />
+						</Backdrop>														
+						<Label name="$(parent)_Label" font="$(BOLD_FONT)|14|soft-shadow-thin" color="C5C29E" text="Trigger type:">
+							<Anchor point="LEFT" relativeTo="$(parent)" anchorPoint="LEFT" offsetX="9" />	
+						</Label>
+						<Control name="$(parent)SubControl" inherits="AM_ComboBox">
+							<Dimensions x="315" y="20" />
+							<Anchor point="RIGHT" relativeTo="$(parent)" relativePoint="RIGHT" offsetX="-4" />
+						</Control>
+					</Controls>
+				</Control>
+
+				<Control name="$(parent)DynamicControls">
+					<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" />
+					<Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" />
+				</Control>
+				
+			</Controls>
+			<OnInitialized>
+				AuraMastery:InitCustomUntriggerTypeSelect()
+			</OnInitialized>
+		</TopLevelControl>
+		
+		<TopLevelControl name="AuraMasteryAuraActionsWindow" clampedToScreen="true" mouseEnabled="true" movable="true" tier="1" layer="2" hidden="true">
+			<Dimensions x="600" y="400" />
+			<Anchor point="LEFT" relativeTo="GuiRoot" relativePoint="LEFT" offsetX="100" />
+			<Controls>			
+				<Backdrop name="$(parent)_Backdrop" inherits="ZO_DefaultBackdrop" />
+				<Label name="$(parent)_Label" font="$(BOLD_FONT)|18|soft-shadow-thin" color="C5C29E" text="Trigger Events">
+					<Anchor point="TOP" relativeTo="$(parent)" anchorPoint="TOP" offsetY="6" />
+				</Label>
+				<Button name="$(parent)_CloseButton" inherits="ZO_CloseButton">
+					<OnClicked>self:GetParent():SetHidden(true)</OnClicked>
+				</Button>
+				
+				<Button name="$(parent)SubCategoryAnimations" inherits="ZO_DefaultButton" text="Animations">				
+					<Anchor point="TOPLEFT" relativeTo="$(parent)" anchorPoint="TOPLEFT" offsetX="0" offsetY="42" />
+					<OnClicked>
+						AuraMasteryAuraActionsWindow_DisplayContainer_Sounds:SetHidden(true)
+						AuraMasteryAuraActionsWindow_DisplayContainer_Animations:SetHidden(false)
+					</OnClicked>
+				</Button>
+
+				<Button name="$(parent)SubCategorySounds" inherits="ZO_DefaultButton" text="Sounds">
+					<Anchor point="TOPLEFT" relativeTo="$(parent)" anchorPoint="TOPLEFT" offsetX="120" offsetY="42" />
+					<OnClicked>
+						AuraMasteryAuraActionsWindow_DisplayContainer_Animations:SetHidden(true)
+						AuraMasteryAuraActionsWindow_DisplayContainer_Sounds:SetHidden(false)						
+					</OnClicked>
+				</Button>				
+			
+				<Control name="$(parent)_DisplayContainer">
+					<Anchor point="TOPLEFT" relativeTo="$(parent)" anchorPoint="TOPLEFT" offsetY="86" />
+					<Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" anchorPoint="BOTTOMRIGHT" />
+					<Controls>
+<!--
+<Backdrop name="$(parent)BG" centerColor="00000000" edgeColor="00FF00">
+	<AnchorFill />
+	<Edge edgeSize="1" />
+</Backdrop>
+-->
+						<Control name="$(parent)_Sounds">
+							<Anchor point="TOPLEFT" relativeTo="$(parent)" anchorPoint="TOPLEFT" />
+							<Controls>
+								<Label name="$(parent)_LabelTrigger" font="$(BOLD_FONT)|18|soft-shadow-thin" color="C5C29E" text="On Trigger:">
+									<Anchor point="TOPLEFT" relativeTo="$(parent)" anchorPoint="TOPLEFT" offsetY="8" />
+								</Label>	
+								<Control name="$(parent)_TriggerActions" inherits="AM_TriggerControl">
+									<Dimensions x="550" y="28" />
+									<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetY="36" />
+									<Controls>
+										<Control name="$(parent)_ScrollableComboBox" inherits="AM_ScrollableComboBox" tier="2">
+											<Dimensions x="420" y="28" />
+											<Anchor point="RIGHT" relativeTo="$(parent)" relativePoint="RIGHT" offsetY="1" offsetX="1" />
+										</Control>
+									</Controls>
+									<OnInitialized>
+										self:GetNamedChild("_Label"):SetText("Play Sound:")
+										AuraMastery:InitTriggerSoundsComboBox()
+									</OnInitialized>
+								</Control>
+								<Label name="$(parent)_LabelUntrigger" font="$(BOLD_FONT)|18|soft-shadow-thin" color="C5C29E" text="On Untrigger:">
+									<Anchor point="TOPLEFT" relativeTo="$(parent)" anchorPoint="TOPLEFT" offsetY="96" />
+								</Label>	
+								<Control name="$(parent)_UntriggerActions" inherits="AM_TriggerControl">
+									<Dimensions x="550" y="28" />
+									<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetY="120" />
+									<Controls>
+										<Control name="$(parent)_ScrollableComboBox" inherits="AM_ScrollableComboBox" tier="2">
+											<Dimensions x="420" y="28" />
+											<Anchor point="RIGHT" relativeTo="$(parent)" relativePoint="RIGHT" offsetY="1" offsetX="1" />
+										</Control>
+									</Controls>
+									<OnInitialized>
+										self:GetNamedChild("_Label"):SetText("Play Sound:")
+										AuraMastery:InitUntriggerSoundsComboBox()
+									</OnInitialized>
+								</Control>
+							</Controls>
+							<OnInitialized>
+								self:SetHidden(true)
+							</OnInitialized>
+						</Control>
+		
+						<Control name="$(parent)_Animations">
+							<Anchor point="TOPLEFT" relativeTo="$(parent)" anchorPoint="TOPLEFT" />
+							<Controls>		
+								<Label name="$(parent)_LabelTrigger" font="$(BOLD_FONT)|18|soft-shadow-thin" color="C5C29E" text="On Trigger:">
+									<Anchor point="TOPLEFT" relativeTo="$(parent)" anchorPoint="TOPLEFT" offsetY="8" />
+								</Label>
+								<Control name="$(parent)_TriggerAnimationEnabled" inherits="AM_TriggerControl">
+									<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetY="40" />
+									<Controls>
+										<Button name="$(parent)_Checkbox" inherits="ZO_CheckButton">
+											<Anchor point="RIGHT" relativeTo="$(parent)" relativePoint="RIGHT" offsetX="-4" />
+											<OnInitialized>
+												ZO_CheckButton_SetToggleFunction(self, AuraMastery.EditAuraTriggerAnimation)
+											</OnInitialized>
+										</Button>
+									</Controls>
+									<OnInitialized>
+										self:GetNamedChild("_Label"):SetText("Play Screen Flash Animation:")
+									</OnInitialized>
+								</Control>
+
+								<Control name="$(parent)_TriggerAnimationColor" inherits="AM_TriggerControl">
+									<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetY="70" />
+									<OnInitialized>
+										self:GetNamedChild("_Label"):SetText("Flash Color:")
+									</OnInitialized>
+								</Control>
+
+								<Control name="$(parent)_TriggerAnimationEndAlpha" inherits="AM_TriggerControl">
+									<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetY="100" />
+									<Controls>
+										<Backdrop name="$(parent)_Editbox" inherits="AM_EditBox">
+											<Anchor point="RIGHT" relativeTo="$(parent)" relativePoint="RIGHT" offsetX="-4" />
+											<OnInitialized>
+												local editbox = self:GetNamedChild("_Editbox")
+												editbox:SetHandler("OnEnter", function() AuraMastery:EditAuraTriggerAnimationEndAlpha(editbox); end)
+											</OnInitialized>
+										</Backdrop>
+									</Controls>
+									<OnInitialized>
+										self:GetNamedChild("_Label"):SetText("Max Flash Transparency [%]:")
+									</OnInitialized>
+								</Control>				
+								
+								<Control name="$(parent)_TriggerAnimationDuration" inherits="AM_TriggerControl">
+									<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetY="130" />
+									<Controls>
+										<Backdrop name="$(parent)_Editbox" inherits="AM_EditBox">
+											<Anchor point="RIGHT" relativeTo="$(parent)" relativePoint="RIGHT" offsetX="-4" />
+											<OnInitialized>
+												local editbox = self:GetNamedChild("_Editbox")
+												editbox:SetHandler("OnEnter", function() AuraMastery:EditAuraTriggerAnimationDuration(editbox); end)
+											</OnInitialized>
+										</Backdrop>
+									</Controls>
+									<OnInitialized>
+										self:GetNamedChild("_Label"):SetText("Duration per Flash [milliseconds]:")
+									</OnInitialized>
+								</Control>
+								
+								<Control name="$(parent)_TriggerAnimationLoopCount" inherits="AM_TriggerControl">
+									<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetY="160" />
+									<Controls>
+										<Backdrop name="$(parent)_Editbox" inherits="AM_EditBox">
+											<Anchor point="RIGHT" relativeTo="$(parent)" relativePoint="RIGHT" offsetX="-4" />
+											<OnInitialized>
+												local editbox = self:GetNamedChild("_Editbox")
+												editbox:SetHandler("OnEnter", function() AuraMastery:EditAuraTriggerAnimationLoopCount(editbox); end)
+											</OnInitialized>
+										</Backdrop>
+									</Controls>
+									<OnInitialized>
+										self:GetNamedChild("_Label"):SetText("Number of Flashes:")
+									</OnInitialized>
+								</Control>
+								
+								<Control name="$(parent)_TriggerAnimationDelay" inherits="AM_TriggerControl">
+									<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetY="190" />
+									<Controls>
+										<Backdrop name="$(parent)_Editbox" inherits="AM_EditBox">
+											<Anchor point="RIGHT" relativeTo="$(parent)" relativePoint="RIGHT" offsetX="-4" />
+											<OnInitialized>
+												local editbox = self:GetNamedChild("_Editbox")
+												editbox:SetHandler("OnEnter", function() AuraMastery:EditAuraTriggerAnimationDelay(editbox); end)
+											</OnInitialized>
+										</Backdrop>
+									</Controls>
+									<OnInitialized>
+										self:GetNamedChild("_Label"):SetText("Delay [milliseconds]:")
+									</OnInitialized>
+								</Control>
+							</Controls>
+							<OnInitialized>
+								self:SetHidden(true)
+							</OnInitialized>
+						</Control>
+
+
+					</Controls>
+				</Control>
+			
+			</Controls>
+
+		</TopLevelControl>
+	
+		<TopLevelControl name="AuraMasteryMenuContainer" clampedToScreen="true" mouseEnabled="true" movable="true" tier="1" hidden="true">
+			<!--<Dimensions x="1280" y="768" />-->
+			<Dimensions x="896" y="768" />
+			<Anchor point="CENTER" relativeTo="GuiRoot" relativePoint="CENTER" />
+			<Controls>
+				<Backdrop name="$(parent)_Backdrop" inherits="ZO_DefaultBackdrop" />
+<!--
+<Backdrop name="MENUBackdrop" centerColor="00000000" edgeColor="00FF00">
+	<AnchorFill />
+	<Edge edgeSize="1" />
+</Backdrop>
+-->
+<!-- Left Container -->
+				<Control name="AuraMasteryMenuAuraListContainer">
+					<Dimensions x="300" y="768" />
+					<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" />
+					<Controls>
+						<Button name="NewAuraButton" inherits="ZO_DefaultButton" text="Create new Aura">
+							<Dimensions x="292" y="30" />
+							<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="4" offsetY="4" />
+							<OnClicked>
+								AuraMastery:LoadNewAuraMenu()
+							</OnClicked>
+						</Button>
+
+						<Button name="ImportAuraButton" inherits="ZO_DefaultButton" text="Import aura">
+							<Dimensions x="292" y="30" />
+							<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="4" offsetY="38" />
+							<OnClicked>
+								AuraMastery:LoadImportAuraMenu()
+							</OnClicked>
+						</Button>
+
+						<!-- should actually be "ManageAuraGroupsButton" but left this way cuz quick and dirty... -->
+						<Button name="EditAuraGroupsButton" inherits="ZO_DefaultButton" text="Edit Aura Groups">
+							<Dimensions x="292" y="30" />
+							<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="4" offsetY="72" />
+							<OnClicked>
+								AuraMastery:LoadAuraGroupsMenu()
+							</OnClicked>
+						</Button>
+						
+						<!-- Aura Group Select -->
+						<Control name="AuraMasteryAuraMenu_GroupNumber" inherits="AM_ComboBox">
+							<Dimensions x="292" y="30" />
+							<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="4" offsetY="106" />
+						</Control>
+						
+					</Controls>
+				</Control>
+
+<!-- Right  Container -->					
+				<Control name="AuraMasteryMenuConfigContainer">
+					<Dimensions x="980" y="768" />
+					<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="304" />
+					<Controls>
+
+<!--
+<Backdrop name="$(parent)_Backdrop" centerColor="00000000" edgeColor="00FF00">
+	<AnchorFill />
+	<Edge edgeSize="1" />
+</Backdrop>
+-->
+<!-- New Aura Menu -->
+						<Control name="AuraMasteryMenu_NewAura" hidden="true">
+							<Dimensions x="275" />
+							<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="4" />
+							<Controls>
+
+		<!--
+		<Backdrop name="$(parent)_Backdrop" centerColor="00000000" edgeColor="00FFFF">
+			<AnchorFill />
+			<Edge edgeSize="1" />
+		</Backdrop>
+		-->
+
+								<Label name="$(parent)_Label" font="$(BOLD_FONT)|18|soft-shadow-thin" color="FF7300" text="Create New Aura">
+									<Anchor point="TOP" relativeTo="$(parent)" anchorPoint="TOP" />	
+								</Label>
+
+								<Button name="NewIconButton" inherits="ZO_DefaultButton" text="Icon">
+									<Dimensions x="292" y="30" />
+									<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="4" offsetY="38" />
+									<OnClicked>
+										AuraMastery:NewIcon()
+									</OnClicked>
+								</Button>
+<!--
+								<Button name="NewTextureButton" inherits="ZO_DefaultButton" text="Texture">
+									<Dimensions x="292" y="30" />
+									<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="4" offsetY="72" />
+									<OnClicked>
+										AuraMastery:NewIcon()
+									</OnClicked>
+								</Button>
+-->
+								<Button name="NewProgressbarButton" inherits="ZO_DefaultButton" text="Progress Bar">
+									<Dimensions x="292" y="30" />
+									<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="4" offsetY="72" />
+									<OnClicked>
+										AuraMastery:NewProgressBar()
+									</OnClicked>
+								</Button>
+
+								<Button name="NewTextButton" inherits="ZO_DefaultButton" text="Text">
+									<Dimensions x="292" y="30" />
+									<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="4" offsetY="106" />
+									<OnClicked>
+										AuraMastery:NewText()
+									</OnClicked>
+								</Button>
+
+							</Controls>
+						</Control>
+<!-- /New Aura Menu -->
+<!-- New Aura Group Menu -->
+						<Control name="AuraMasteryMenu_EditAuraGroups" hidden="true">
+							<Dimensions x="275" />
+							<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="4" />
+							<Controls>
+								<Label name="$(parent)_LabelCreateAuraGroup" font="$(BOLD_FONT)|18|soft-shadow-thin" color="FF7300" text="Create new aura group">
+									<Anchor point="TOP" relativeTo="$(parent)" anchorPoint="TOP" />	
+								</Label>
+								<Control name="$(parent)_Editbox" inherits="AM_TriggerControl">
+									<Dimensions x="292" y="30" />
+									<Anchor point="LEFT" relativeTo="($parent)" relativePoint="LEFT" offsetY="40" />
+									<Controls>
+										<Backdrop name="$(parent)_EditboxBG" inherits="AM_TextBox">
+											<Dimensions x="200" y="22" />
+											<Anchor point="RIGHT" relativeTo="$(parent)" relativePoint="RIGHT" />
+										</Backdrop>
+									</Controls>
+									<OnInitialized>
+										self:GetNamedChild("_Label"):SetText("Group Name:")
+										self:GetNamedChild("_EditboxBG_Editbox"):SetText("Enter desired name...")
+									</OnInitialized>
+								</Control>
+								
+								<Button name="CreateAuraGroupButton" inherits="ZO_DefaultButton" text="Create">
+									<Dimensions x="292" y="30" />
+									<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="4" offsetY="60" />
+									<OnClicked>
+										local name = WINDOW_MANAGER:GetControlByName("AuraMasteryMenu_EditAuraGroups_Editbox_EditboxBG_Editbox"):GetText()
+										if "Enter desired name..." == name then name = ""; end
+										AuraMastery:NewAuragroup(name)
+									</OnClicked>
+								</Button>
+								
+								<Label name="$(parent)_LabelManageAuraGroups" font="$(BOLD_FONT)|18|soft-shadow-thin" color="FF7300" text="Manage Aura Groups">
+									<Anchor point="TOP" relativeTo="$(parent)" anchorPoint="TOP" offsetY="120" />	
+								</Label>
+
+								<!-- Aura Groups Scroll List belongs here and is created dynamically -->
+							</Controls>
+							<OnInitialized>
+								AuraMastery:InitAuraGroupsScrollList()
+							</OnInitialized>
+						</Control>
+<!-- /New Auragroup Menu -->
+<!-- Edit Aura Menu -->
+						<Control name="AuraMasteryMenu_EditAura" hidden="true">
+							<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="4" offsetY="4" />
+							<Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="-4" offsetY="-4" />
+							<Controls>
+<!--
+<Backdrop name="$(parent)_Backdrop" centerColor="00000000" edgeColor="FF00FF">
+	<AnchorFill />
+	<Edge edgeSize="1" />
+</Backdrop>
+-->
+<!-- Display-Settings-Box -->
+								<Control name="DisplaySettings" resizeToFitDescendents="true">
+									<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" />
+									<Controls>
+<!--
+<Backdrop name="$(parent)_Backdrop" centerColor="00000000" edgeColor="00FFFF">
+	<AnchorFill />
+	<Edge edgeSize="1" />
+</Backdrop>
+-->
+										<Label name="$(parent)_Label" font="$(BOLD_FONT)|18|soft-shadow-thin" color="C5C29E" text="Display Settings">
+											<Anchor point="TOP" relativeTo="$(parent)" anchorPoint="TOP" />	
+										</Label>
+<!--
+										<Control name="AuraMasteryDisplayMenu_AuraName" inherits="AM_TriggerControl">
+											<Dimensions x="210" />
+											<Anchor point="TOP" relativeTo="$(parent)" relativePoint="TOP" offsetY="29" />
+											<Controls>
+												<Backdrop name="$(parent)_EditboxBG" inherits="AM_EditBox">
+													<Dimensions x="140" y="20" />
+													<Anchor point="RIGHT" relativeTo="$(parent)" relativePoint="RIGHT" offsetX="-4" />
+												</Backdrop>
+											</Controls>
+											<OnInitialized>
+												self:GetNamedChild("_Label"):SetText("Name:")
+											</OnInitialized>
+										</Control>
+-->
+										<Control name="$(parent)DynamicControls">
+											<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" />
+											<Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" />	
+										</Control>
+			<!-- [Export Aura Button] -->
+										<Button name="ExportAuraButton" inherits="ZO_DefaultButton" font="$(BOLD_FONT)|14|soft-shadow-thin" text="Export aura">
+											<Anchor point="TOP" relativeTo="$(parent)" relativePoint="TOP" offsetY="700" />
+												<OnClicked>
+													AuraMastery:DisplayExportAuraWindow()
+												</OnClicked>
+										</Button>
+			<!-- [/Export Aura Button] -->
+									</Controls>
+
+								</Control>
+<!-- /Display-Settings-Box -->
+<!-- Trigger-Settings-Box -->
+								<Control name="TriggerSettings">
+								<Dimensions x="275" />
+									<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="240" />
+									<OnInitialized>
+										AuraMastery:InitTriggerSelect()
+										AuraMastery:InitTriggerTypeSelect()
+									</OnInitialized>
+									<Controls>
+<!--
+<Backdrop name="$(parent)_Backdrop" centerColor="00000000" edgeColor="00FFFF">
+	<AnchorFill />
+	<Edge edgeSize="1" />
+</Backdrop>
+-->
+										<Label name="$(parent)_Label" font="$(BOLD_FONT)|18|soft-shadow-thin" color="C5C29E" text="Trigger Settings">
+											<Anchor point="TOP" relativeTo="$(parent)" anchorPoint="TOP" />	
+										</Label>
+
+										<!-- Add trigger button -->
+										<Button name="AddTrigger" inherits="ZO_DefaultButton" font="$(BOLD_FONT)|14|soft-shadow-thin" text="Add Condition">
+											<Dimensions y="25" />
+											<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetY="29" />
+											<OnClicked>
+												AuraMastery:NewTrigger()
+											</OnClicked>
+										</Button>
+										
+										<!-- trigger select -->
+										<Control name="AuraMasteryAuraMenu_TriggerNumber" inherits="AM_ComboBox">
+											<Dimensions x="125" y="25" />
+											<Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetY="29" />
+										</Control>
+	
+										<Control name="AuraMasteryTriggerSettingsContainer">
+											<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetY="87" />
+											<Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" />
+											<Controls>
+<!--
+<Backdrop name="$(parent)_Backdrop" centerColor="00000000" edgeColor="FFFF00">
+	<AnchorFill />
+	<Edge edgeSize="1" />
+</Backdrop>
+-->
+												<!-- Trigger type section -->
+												<Control name="AuraMasteryTriggerMenu_TriggerType">
+													<Dimensions x="275" y="28" />
+													<Anchor point="TOP" relativeTo="$(parent)" relativePoint="TOP" />
+													<Controls>
+														<Backdrop name="$(parent)_Backdrop" centerColor="0F0F0F" edgeColor="1FFFFFFF"> <!-- color: AlphaRedGreenBlue -->
+															<AnchorFill />
+															<Edge edgeSize="1" />
+														</Backdrop>														
+														<Label name="$(parent)_Label" font="$(BOLD_FONT)|14|soft-shadow-thin" color="C5C29E" text="Trigger type:">
+															<Anchor point="LEFT" relativeTo="$(parent)" anchorPoint="LEFT" offsetX="9" />	
+														</Label>
+														<Control name="$(parent)SubControl" inherits="AM_ComboBox">
+															<Dimensions x="140" y="20" />
+															<Anchor point="RIGHT" relativeTo="$(parent)" relativePoint="RIGHT" offsetX="-4" />
+														</Control>
+													</Controls>
+												</Control>
+
+												<!-- Other controls are defined dynamically in AddonMenu.lua, CreateMenuControls() -->
+												<Control name="$(parent)DynamicControls">
+													<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" />
+													<Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" />												
+												</Control>	
+												<!-- Remove Trigger Button -->							
+												<Button name="RemoveTrigger" inherits="ZO_DefaultButton" font="$(BOLD_FONT)|14|soft-shadow-thin" text="Delete Condition">
+													<Anchor point="TOP" relativeTo="$(parent)" relativePoint="TOP" offsetX="4" offsetY="330" />
+													<OnClicked>
+														AuraMastery:DeleteTrigger()
+													</OnClicked>
+												</Button>
+											</Controls>
+										</Control>
+									</Controls>
+								</Control>
+<!-- /Trigger-Settings-Box -->
+<!-- Loading Conditions - Box -->
+								<Control name="AuraMasteryLoadingConditions" resizeToFitDescendents="true">
+									<Dimensions x="275" />
+									<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="240" offsetY="510" />
+									<OnInitialized>
+										<!--AuraMastery:InitLoadingConditionsSelect()
+										AuraMastery:InitLoadingConditionsTypeSelect()-->
+									</OnInitialized>
+									<Controls>
+<!--
+<Backdrop name="$(parent)_Backdrop" centerColor="00000000" edgeColor="FFFF00">
+	<AnchorFill />
+	<Edge edgeSize="1" />
+</Backdrop>
+-->
+										<Label name="$(parent)_Label" font="$(BOLD_FONT)|18|soft-shadow-thin" color="C5C29E" text="Loading Conditions">
+											<Anchor point="TOP" relativeTo="$(parent)" anchorPoint="TOP" />	
+										</Label>
+										
+										<Control name="AuraMasteryLoadingConditionsMenu_InCombatOnly" inherits="AM_TriggerControl">
+											<Anchor point="TOP" relativeTo="$(parent)" relativePoint="TOP" offsetY="29" />
+											<OnInitialized>
+												self:GetNamedChild("_Label"):SetText("In Combat only:")
+											</OnInitialized>
+											<Controls>
+												<Button name="AuraMasteryLoadingConditionsMenu_InCombatOnlyButton" inherits="AM_Switch">
+													<OnClicked>
+														AuraMastery:EditLoadingConditionInCombatOnly()
+													</OnClicked>
+												</Button>
+											</Controls>
+										</Control>
+										
+										<Control name="AuraMasteryLoadingConditionsAbilitiesSlotedContainer" resizeToFitDescendents="true">
+											<Dimensions x="275" />
+											<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetY="58" />
+											<Controls>
+												<Backdrop name="$(parent)_Backdrop" centerColor="0F0F0F" edgeColor="1FFFFFFF"> <!-- color: AlphaRedGreenBlue -->
+													<AnchorFill />
+													<Edge edgeSize="1" />
+												</Backdrop>
+												<Label name="$(parent)_Label" font="$(BOLD_FONT)|14|soft-shadow-thin" color="C5C29E" text="Abilities Sloted:">
+													<Anchor point="TOPLEFT" relativeTo="$(parent)" anchorPoint="TOPLEFT" offsetX="9" />	
+												</Label>
+												<Backdrop name="$(parent)_Editbox" inherits="AM_EditBox">
+													<Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="-100" />
+													<Edge edgeSize="1" />
+												</Backdrop>
+												<Button name="AddAbilityToLoadingConditionsButton" inherits="ZO_DefaultButton" font="$(BOLD_FONT)|14|soft-shadow-thin" text="Add Ability-ID">
+													<Dimensions x="100" y="20" />
+													<Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" />
+													<OnClicked>
+														AuraMastery:AddAbilityToLoadingConditions()
+													</OnClicked>
+												</Button>												
+				
+											</Controls>
+										</Control>
+									</Controls>
+								</Control>
+<!-- /Loading Conditions - Box -->
+
+							</Controls>
+						</Control>
+<!-- /Edit Aura Menu -->
+
+					</Controls>
+				</Control>
+
+<!-- Error display -->
+				<Control name="NotificationDisplay" hidden="true" resizeToFitDescendents="true">			
+					<Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" />
+					<Controls>
+<!--
+<Backdrop name="$(parent)_Backdrop" centerColor="00000000" edgeColor="FF0000">
+<AnchorFill />
+<Edge edgeSize="1" />
+</Backdrop>
+-->
+
+						<Label name="$(parent)_Label" font="$(BOLD_FONT)|16|soft-shadow-thin" color="FF0000">
+							<Anchor point="LEFT" relativeTo="$(parent)" relativePoint="LEFT" />
+						</Label>
+					</Controls>
+				</Control>
+<!-- /Error display -->				
+				
+			</Controls>
+		</TopLevelControl>
+	</Controls>
+</GuiXml>

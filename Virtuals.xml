@@ -1,0 +1,299 @@
+<GuiXml>
+	<Controls>
+
+		<!-- Trigger Control -->
+		<Control name="AM_TriggerControl" virtual="true">
+			<Dimensions x="275" y="28" />
+			<Controls>
+				<Backdrop name="$(parent)_Backdrop" centerColor="0F0F0F" edgeColor="1FFFFFFF"> <!-- color: AlphaRedGreenBlue -->
+					<AnchorFill />
+					<Edge edgeSize="1" />
+				</Backdrop>
+				<Label name="$(parent)_Label" font="$(BOLD_FONT)|14|soft-shadow-thin" color="C5C29E">
+					<Anchor point="LEFT" relativeTo="$(parent)" anchorPoint="LEFT" offsetX="9" />
+				</Label>
+			</Controls>
+		</Control>
+
+		<!-- Editbox (max 6 chars input) -->
+		<Backdrop name="AM_EditBox" centerColor="343434" edgeColor="4C4C4C" virtual="true">
+			<Dimensions x="40" y="20" />
+			<Edge edgeSize="1" />
+			<Controls>
+				<EditBox name="$(parent)_Editbox" maxInputCharacters="6" font="$(BOLD_FONT)|14|soft-shadow-thin" mouseEnabled="true">
+					<Anchor point="TOPLEFT" offsetX="AM_SINGLE_LINE_EDIT_CONTAINER_PADDING_LEFT" offsetY="AM_SINGLE_LINE_EDIT_CONTAINER_PADDING_TOP"/>
+					<Anchor point="BOTTOMRIGHT" offsetX="-AM_SINGLE_LINE_EDIT_CONTAINER_PADDING_RIGHT" offsetY="-AM_SINGLE_LINE_EDIT_CONTAINER_PADDING_BOTTOM"/>
+					<OnMouseDown>
+						AuraMastery:EditBoxOnMouseDown(self)
+					</OnMouseDown>
+					<OnEscape>
+						AuraMastery:EditBoxOnEscape(self)
+					</OnEscape>
+					<OnMouseEnter>
+						AuraMastery:EditBoxOnMouseEnter(self)
+					</OnMouseEnter>
+					<OnMouseExit>
+						AuraMastery:EditBoxOnMouseExit(self)
+					</OnMouseExit>
+					<OnFocusGained>
+						 if WINDOW_MANAGER:IsHandlingHardwareEvent() then
+							  PlaySound(SOUNDS.EDIT_CLICK)
+						 end
+					</OnFocusGained>
+				</EditBox>
+			</Controls>
+		</Backdrop>
+
+		<!-- Textbox -->
+		<Backdrop name="AM_TextBox" centerColor="343434" edgeColor="4C4C4C" virtual="true">
+			<Anchor point="TOP" relativeTo="$(parent)" relativePoint="TOP" />
+			<Edge edgeSize="1" />
+			<Controls>
+				<EditBox name="$(parent)_Editbox" font="$(BOLD_FONT)|14|soft-shadow-thin" mouseEnabled="true">
+					<Anchor point="TOPLEFT" offsetX="AM_SINGLE_LINE_EDIT_CONTAINER_PADDING_LEFT" offsetY="AM_SINGLE_LINE_EDIT_CONTAINER_PADDING_TOP"/>
+					<Anchor point="BOTTOMRIGHT" offsetX="-AM_SINGLE_LINE_EDIT_CONTAINER_PADDING_RIGHT" offsetY="-AM_SINGLE_LINE_EDIT_CONTAINER_PADDING_BOTTOM"/>
+					<OnMouseDown>
+						AuraMastery:EditBoxOnMouseDown(self)
+					</OnMouseDown>
+					<OnEscape>
+						AuraMastery:EditBoxOnEscape(self)
+					</OnEscape>
+					<OnMouseEnter>
+						AuraMastery:EditBoxOnMouseEnter(self)
+					</OnMouseEnter>
+					<OnMouseExit>
+						AuraMastery:EditBoxOnMouseExit(self)
+					</OnMouseExit>
+					<OnFocusGained>
+						 if WINDOW_MANAGER:IsHandlingHardwareEvent() then
+							  PlaySound(SOUNDS.EDIT_CLICK)
+						 end
+					</OnFocusGained>
+				</EditBox>
+			</Controls>
+		</Backdrop>
+
+		<!-- Trigger ComboBox -->
+		<Control name="AM_ComboBox" mouseEnabled="true" virtual="true">
+			<OnInitialized>
+				 ZO_ComboBox:New(self)
+			</OnInitialized>
+			<OnMouseUp>
+				 ZO_ComboBox_DropdownClicked(self)
+				 PlaySound(SOUNDS.COMBO_CLICK)
+			</OnMouseUp>
+			<Controls>
+				<Backdrop name="$(parent)_Backdrop" centerColor="343434" edgeColor="4C4C4C">
+					<AnchorFill />
+					<Edge edgeSize="1" />
+				</Backdrop>
+				 <Label name="$(parent)SelectedItemText" font="ZoFontGame" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_SELECTED" wrapMode="ELLIPSIS" verticalAlignment="CENTER">
+					  <Anchor point="CENTER" relativeTo="$(parent)" anchorPoint="CENTER" />	
+				 </Label>
+				 <Button name="$(parent)OpenDropdown" inherits="ZO_DropdownButton">
+					  <Dimensions x="16" y="16" />
+					  <Anchor point="RIGHT" offsetX="-3" />		  
+					  <OnClicked>
+							ZO_ComboBox_DropdownClicked(self:GetParent())
+					  </OnClicked>
+				 </Button>
+			</Controls>
+		</Control>
+
+		<!-- Trigger Scrollable ComboBox -->
+		<Control name="AM_ScrollableComboBox" virtual="true" inherits="ZO_ScrollableComboBox">
+			<OnInitialized>
+				 ZO_ScrollableComboBox:New(self)
+			</OnInitialized>
+		</Control>
+
+		<!-- CheckButton -->
+		<Button name="AM_CheckButton" inherits="ZO_CheckButton" virtual="true">
+			<Anchor point="RIGHT" relativeTo="$(parent)" relativePoint="RIGHT" offsetX="-4" />
+		</Button>
+		
+		<!-- Switch -->
+		<Button name="AM_Switch" clickSound="Click" virtual="true">
+			<Dimensions x="50" y="20" />
+			<Anchor point="RIGHT" relativeTo="$(parent)" relativePoint="RIGHT" offsetX="-4" />
+			<Controls>
+				<Backdrop name="$(parent)_Backdrop" centerColor="343434" edgeColor="4C4C4C">
+					<AnchorFill />
+					<Edge edgeSize="1" />
+				</Backdrop>
+				<Label name="$(parent)_Label" font="$(BOLD_FONT)|14|soft-shadow-thin" color="FFFFFF">
+					<Anchor point="CENTER" relativeTo="$(parent)" anchorPoint="CENTER" />	
+				</Label>
+			</Controls>
+			<OnMouseEnter>
+				AuraMastery:SwitchOnMouseEnter(self)
+			</OnMouseEnter>
+			<OnMouseExit>
+				AuraMastery:SwitchOnMouseExit(self)
+			</OnMouseExit>
+			<OnClicked>
+				AuraMastery:SwitchOnClicked(self)
+			</OnClicked>
+		</Button>
+	
+		<!-- Aura List Entry -->
+<!--		<Button name="AM_ScrollListRowElement" virtual="true" clickSound="Click" font="$(BOLD_FONT)|18|soft-shadow-thin" horizontalAlignment="0" verticalAlignment="1">
+            <Dimensions x="292" y="30" />
+            <Anchor point="TOPLEFT" relativeTo="$(parent)" anchorPoint="TOPLEFT" offsetX="4" />
+			<FontColors normalColor="75BDC2" mouseOverColor="FFFFFF" pressedColor="FFFFFF" />
+			<Textures normal="EsoUI/Art/Contacts/social_list_bgStrip.dds" mouseOver="EsoUI/Art/Contacts/social_list_bgStrip_highlight.dds" pressed="EsoUI/Art/Contacts/social_list_bgStrip_highlight.dds" />
+			<TextureCoords left="0" right="0.7606999874115" top="0" bottom="1" />
+			<NormalOffset x="36" y="0" />
+			<PressedOffset x="36" y="0" />
+			<Controls>
+				<Texture name="$(parent)_Thumbnail" textureFile="">
+					<Dimensions x="24" y="24" />
+					<Anchor point="LEFT" relativeTo="$(parent)" anchorPoint="LEFT" offsetX="4"  />
+				</Texture>
+				<Button name="$(parent)_DeleteButton" clickSound="Click">
+					<Dimensions x="24" y="24" />
+					<Anchor point="RIGHT" relativeTo="$(parent)" anchorPoint="RIGHT" offsetX="-10" />
+					<Textures normal="EsoUI/Art/Buttons/decline_up.dds" mouseOver="EsoUI/Art/Buttons/decline_over.dds" pressed="EsoUI/Art/Buttons/decline_down.dds" />
+				</Button>
+            </Controls>
+        </Button>-->
+		
+		<Control name="AM_ScrollListRowElement" virtual="true" mouseEnabled="true" clickSound="Click" font="$(BOLD_FONT)|18|soft-shadow-thin" horizontalAlignment="0" verticalAlignment="1">
+            <Dimensions x="292" y="30" />
+            <Anchor point="TOPLEFT" relativeTo="$(parent)" anchorPoint="TOPLEFT" offsetX="4" />
+			<OnMouseEnter>
+				ZO_ScrollList_MouseEnter(AM_ScrollList, self)
+			</OnMouseEnter>
+			<OnMouseExit>
+				ZO_ScrollList_MouseExit(AM_ScrollList, self)
+			</OnMouseExit>
+			<OnMouseUp>
+				if not upInside then return end
+				if button ~= MOUSE_BUTTON_INDEX_RIGHT then
+					ZO_ScrollList_MouseClick(AM_ScrollList, self)
+				end
+			</OnMouseUp>
+
+			<Controls>
+				<Label name="$(parent)_Label" font="$(BOLD_FONT)|18|soft-shadow-thin" color="75BDC2">
+					<Anchor point="LEFT" relativeTo="$(parent)" relativePoint="LEFT" offsetX="36" />
+				</Label>
+				<Texture name="$(parent)_Thumbnail" textureFile="">
+					<Dimensions x="24" y="24" />
+					<Anchor point="LEFT" relativeTo="$(parent)" anchorPoint="LEFT" offsetX="4"  />
+				</Texture>
+				<Button name="$(parent)_VisibilityButton" clickSound="Click">
+					<Dimensions x="32" y="32" />
+					<Anchor point="RIGHT" relativeTo="$(parent)" anchorPoint="RIGHT" offsetX="-24" />
+					<Textures normal="EsoUI/Art/Tutorial/stealth-seen.dds" mouseOver="EsoUI/Art/Tutorial/stealth-seen.dds" pressed="EsoUI/Art/Tutorial/stealth-seen.dds" />
+				</Button>
+				<Button name="$(parent)_DeleteButton" clickSound="Click">
+					<Dimensions x="24" y="24" />
+					<Anchor point="RIGHT" relativeTo="$(parent)" anchorPoint="RIGHT" />
+					<Textures normal="EsoUI/Art/Buttons/decline_up.dds" mouseOver="EsoUI/Art/Buttons/decline_over.dds" pressed="EsoUI/Art/Buttons/decline_down.dds" />
+				</Button>
+            </Controls>
+        </Control>
+
+		<!-- Aura Groups List Entry -->
+		<Control name="AM_AuraGroupsScrollListRowElement" virtual="true" font="$(BOLD_FONT)|18|soft-shadow-thin" horizontalAlignment="0" verticalAlignment="1">
+            <Dimensions x="292" y="30" />
+            <Anchor point="TOPLEFT" relativeTo="$(parent)" anchorPoint="TOPLEFT" offsetX="4" />
+			<Controls>
+				<Label name="$(parent)_Label" font="$(BOLD_FONT)|14|soft-shadow-thin" color="FFFFFF">
+					<Anchor point="LEFT" relativeTo="$(parent)" relativePoint="LEFT" offsetX="4" />
+				</Label>
+				<Button name="$(parent)_ExportButton" excludeFromResizeToFitExtents="true">
+					<Dimensions x="32" y="32"/>
+					<Anchor point="RIGHT" relativeTo="$(parent)" relativePoint="RIGHT" offsetX="-34" offsetY="-2" />
+					<Textures normal="EsoUI/Art/Buttons/edit_save_up.dds" pressed="EsoUI/Art/Buttons/edit_save_down.dds" mouseOver="EsoUI/Art/Buttons/edit_save_over.dds" disabled="EsoUI/Art/Buttons/edit_save_disabled.dds" />
+					<OnMouseEnter>
+						InitializeTooltip(InformationTooltip, self, BOTTOM, 0, -2)
+						SetTooltipText(InformationTooltip, "Export group and it's auras")
+					</OnMouseEnter>
+					<OnMouseExit>
+						ClearTooltip(InformationTooltip)
+					</OnMouseExit>
+				</Button>
+				<Button name="$(parent)_DeleteButton" clickSound="Click">
+					<Dimensions x="24" y="24" />
+					<Anchor point="RIGHT" relativeTo="$(parent)" anchorPoint="RIGHT" offsetX="-10" />
+					<Textures normal="EsoUI/Art/Buttons/decline_up.dds" mouseOver="EsoUI/Art/Buttons/decline_over.dds" pressed="EsoUI/Art/Buttons/decline_down.dds" />
+					<OnMouseEnter>
+						InitializeTooltip(InformationTooltip, self, BOTTOM, 0, -2)
+						SetTooltipText(InformationTooltip, "Delete (auras will be ungrouped)")
+					</OnMouseEnter>
+					<OnMouseExit>
+						ClearTooltip(InformationTooltip)
+					</OnMouseExit>
+				</Button>
+            </Controls>
+        </Control>		
+		
+		<!-- Action result list entry -->
+		<Control name="AM_ActionResultsListRowElement" virtual="true" inherits="AM_TriggerControl">
+			<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" />
+			<Controls>
+				<Button name="$(parent)_Switch" inherits="AM_Switch">
+				</Button>
+			</Controls>
+		</Control>
+		
+		<!-- Icon aura -->
+		<Control name="AM_IconAuraControl" virtual="true" clampedToScreen="true">
+			<!--<Anchor point="TOPLEFT" relativeTo="AuraMasteryTLW" anchorPoint="TOPLEFT" />-->
+			<Controls>			
+				<Backdrop name="$(parent)_Backdrop">
+					<AnchorFill />
+				</Backdrop>
+				<Cooldown name="$(parent)_Cooldown" fillColor="000000BF" horizontalAlignment="TEXT_ALIGN_CENTER" verticalAlignment="TEXT_ALIGN_CENTER">
+					<AnchorFill />
+				</Cooldown>
+				<Label name="$(parent)_CooldownLabel">
+					<Anchor point="TOPLEFT" relativeTo="$(parent)" anchorPoint="TOPLEFT" offsetX="2" offsetY="2" />
+					<Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" anchorPoint="BOTTOMRIGHT" offsetX="-2" offsetY="-2" />
+				</Label>
+				<Texture name="$(parent)_Icon">
+					<AnchorFill />
+				</Texture>
+			</Controls>
+		</Control>
+		
+		<!-- Progression bar aura -->
+		<Control name="AM_ProgressBarAuraControl" virtual="true" clampedToScreen="true">
+			<Anchor point="TOPLEFT" relativeTo="AuraMasteryTLW" anchorPoint="TOPLEFT" />
+			<Controls>
+				<StatusBar name="$(parent)Status">
+					<Anchor point="CENTER" />
+				</StatusBar>
+			</Controls>
+		</Control>
+
+		<!-- Text aura -->
+		<Control name="AM_TextAuraControl" virtual="true" clampedToScreen="true">
+			<!--<Anchor point="TOPLEFT" relativeTo="AuraMasteryTLW" anchorPoint="TOPLEFT" />-->
+			<Controls>
+				<Label name="$(parent)_Label">
+					<Anchor point="TOPLEFT" relativeTo="$(parent)" anchorPoint="TOPLEFT" offsetX="2" offsetY="2" />
+					<Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" anchorPoint="BOTTOMRIGHT" offsetX="-2" offsetY="-2" />
+				</Label>
+			</Controls>
+		</Control>		
+		
+		<!-- Loading conditions ability list row element -->
+		<Control name="AM_AbilityRow" virtual="true">
+			<Dimensions x="100" y="28" />
+			<Controls>
+				<Label name="$(parent)_Label" font="$(BOLD_FONT)|14|soft-shadow-thin" color="FFFFFF">
+					<Anchor point="LEFT" relativeTo="$(parent)" anchorPoint="LEFT" />
+				</Label>
+				<Button name="$(parent)_DeleteButton" clickSound="Click">
+					<Dimensions x="24" y="24" />
+					<Anchor point="RIGHT" relativeTo="$(parent)" anchorPoint="RIGHT" offsetX="-10" />
+					<Textures normal="EsoUI/Art/Buttons/decline_up.dds" mouseOver="EsoUI/Art/Buttons/decline_over.dds" pressed="EsoUI/Art/Buttons/decline_down.dds" />
+				</Button>
+			</Controls>
+		</Control>
+		
+	</Controls>
+</GuiXml>

@@ -1,0 +1,3 @@
+- benutzerdefinierte skalierung gibt bei auramastery nachkommastellen und dann probleme beim import => format prüfen
+- aura direkt duplizieren (damit man nicht immer exportieren + importieren muss)
+- beim laden des aura menüs direkt den ersten trigger preselecten
