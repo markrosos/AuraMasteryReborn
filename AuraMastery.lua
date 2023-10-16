@@ -250,7 +250,7 @@ end
 
 
 function AuraMastery.OnActionSlotUpdated(eventCode, slotId)
-    -- Refresh action bar data every time an action slot is updated
+    -- refresh action bar data every time an action slot is updated
     RefreshActionBarData()
 
     -- d("Action slot " .. slotId .. " was updated.")
@@ -266,9 +266,9 @@ function AuraMastery.OnActionSlotUpdated(eventCode, slotId)
     AuraMastery:UpdateActionBarSetup(slotId, newAbilityId)
     for auraName, auraData in pairs(AuraMastery.svars.auraData) do
         if auraData.loaded then 
-            local shouldLoad = AuraMastery:CheckLoadingCondition(loadingConditionType, loadingConditionData)  -- assuming you can access these variables here
-            AuraMastery:UpdateAuraLoadingState(auraName, shouldLoad)  -- modify this function to accept a second argument that forces an aura's state if provided
-            -- AuraMastery:UpdateAuraLoadingState(auraName)
+            local shouldLoad = AuraMastery:CheckLoadingCondition(loadingConditionType, loadingConditionData)  
+            AuraMastery:UpdateAuraLoadingState(auraName, shouldLoad)  -- modified this function to accept a second argument that forces an aura's state if provided
+            -- AuraMastery:UpdateAuraLoadingState(auraName) -- old function
         end
     end
 end
@@ -775,6 +775,7 @@ SLASH_COMMANDS["/printabilities"] = function()
         d("Slot " .. i .. ": " .. abilityName .. " - ID: " .. abilityId)
     end
 	end
+
 	-- function AuraMastery.OnActionSlotUpdated(eventCode, slotId)
 	-- 	d("Action slot " .. slotId .. " was updated.")
 	-- 	local activeBar = GetActiveWeaponPairInfo()
@@ -785,8 +786,8 @@ SLASH_COMMANDS["/printabilities"] = function()
 	-- 	AuraMastery:UpdateActionBarSetup(slotId, newAbilityId)
 	-- 	for auraName, auraData in pairs(AuraMastery.svars.auraData) do
 	-- 		if auraData.loaded then 
-	-- 			local shouldLoad = AuraMastery:CheckLoadingCondition(loadingConditionType, loadingConditionData)  -- assuming you can access these variables here
-	--       AuraMastery:UpdateAuraLoadingState(auraName, shouldLoad)  -- modify this function to accept a second argument that forces an aura's state if provided
+	-- 			local shouldLoad = AuraMastery:CheckLoadingCondition(loadingConditionType, loadingConditionData)  
+	--       AuraMastery:UpdateAuraLoadingState(auraName, shouldLoad)
 	-- 			-- AuraMastery:UpdateAuraLoadingState(auraName)
 	-- 		end
 	-- 	end
