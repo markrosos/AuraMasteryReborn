@@ -5,7 +5,7 @@
 		<Control name="AM_TriggerControl" virtual="true">
 			<Dimensions x="275" y="28" />
 			<Controls>
-				<Backdrop name="$(parent)_Backdrop" centerColor="0F0F0F" edgeColor="1FFFFFFF"> <!-- color: AlphaRedGreenBlue -->
+				<Backdrop name="$(parent)_Backdrop" centerColor="0F0F0F" edgeColor="1FFFFFFF">					<!-- color: AlphaRedGreenBlue -->
 					<AnchorFill />
 					<Edge edgeSize="1" />
 				</Backdrop>
@@ -87,31 +87,49 @@
 					<AnchorFill />
 					<Edge edgeSize="1" />
 				</Backdrop>
-				 <Label name="$(parent)SelectedItemText" font="ZoFontGame" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_SELECTED" wrapMode="ELLIPSIS" verticalAlignment="CENTER">
-					  <Anchor point="CENTER" relativeTo="$(parent)" anchorPoint="CENTER" />	
-				 </Label>
-				 <Button name="$(parent)OpenDropdown" inherits="ZO_DropdownButton">
-					  <Dimensions x="16" y="16" />
-					  <Anchor point="RIGHT" offsetX="-3" />		  
-					  <OnClicked>
+				<Label name="$(parent)SelectedItemText" font="ZoFontGame" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_SELECTED" wrapMode="ELLIPSIS" verticalAlignment="CENTER">
+					<Anchor point="CENTER" relativeTo="$(parent)" anchorPoint="CENTER" />
+				</Label>
+				<Button name="$(parent)OpenDropdown" inherits="ZO_DropdownButton">
+					<Dimensions x="16" y="16" />
+					<Anchor point="RIGHT" offsetX="-3" />
+					<OnClicked>
 							ZO_ComboBox_DropdownClicked(self:GetParent())
-					  </OnClicked>
-				 </Button>
+					</OnClicked>
+				</Button>
+				<!-- <Control name="$(parent)Dropdown"> -->
+				<Control name="$(parent)Dropdown" mouseEnabled="true" tier="HIGH" hidden="true" clampedToScreen="true" excludeFromResizeToFitExtents="true">
+					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" />
+					<!-- necessary for dropdown to function, anchors it under the box -->
+					<!-- <Dimensions x="100" y="400" /> -->
+					<Controls>
+						<Backdrop name="$(parent)BG" inherits="ZO_DefaultBackdrop">
+							<AnchorFill />
+						</Backdrop>
+						<!-- <Control name="$(parent)Scroll"> -->
+						<Control name="$(parent)Scroll" inherits="ZO_ScrollList">							<!-- ZO_ScrollList inheritence was missing, fixed a bunch of errors -->
+							<Anchor point="TOPLEFT" offsetY="ZO_SCROLLABLE_COMBO_BOX_LIST_PADDING_Y" />
+							<Anchor point="BOTTOMRIGHT" offsetY="-ZO_SCROLLABLE_COMBO_BOX_LIST_PADDING_Y" />
+							<!-- <Dimensions x="100" y="400" /> -->
+							<!-- other properties and behaviors for the scroll go here -->
+						</Control>
+					</Controls>
+				</Control>
 			</Controls>
 		</Control>
 
-		<!-- Trigger Scrollable ComboBox -->
+		<!-- Trigger Scrollable ComboBox
 		<Control name="AM_ScrollableComboBox" virtual="true" inherits="ZO_ScrollableComboBox">
 			<OnInitialized>
 				 ZO_ScrollableComboBox:New(self)
 			</OnInitialized>
-		</Control>
+		</Control> -->
 
 		<!-- CheckButton -->
 		<Button name="AM_CheckButton" inherits="ZO_CheckButton" virtual="true">
 			<Anchor point="RIGHT" relativeTo="$(parent)" relativePoint="RIGHT" offsetX="-4" />
 		</Button>
-		
+
 		<!-- Switch -->
 		<Button name="AM_Switch" clickSound="Click" virtual="true">
 			<Dimensions x="50" y="20" />
@@ -122,7 +140,7 @@
 					<Edge edgeSize="1" />
 				</Backdrop>
 				<Label name="$(parent)_Label" font="$(BOLD_FONT)|14|soft-shadow-thin" color="FFFFFF">
-					<Anchor point="CENTER" relativeTo="$(parent)" anchorPoint="CENTER" />	
+					<Anchor point="CENTER" relativeTo="$(parent)" anchorPoint="CENTER" />
 				</Label>
 			</Controls>
 			<OnMouseEnter>
@@ -135,9 +153,9 @@
 				AuraMastery:SwitchOnClicked(self)
 			</OnClicked>
 		</Button>
-	
+
 		<!-- Aura List Entry -->
-<!--		<Button name="AM_ScrollListRowElement" virtual="true" clickSound="Click" font="$(BOLD_FONT)|18|soft-shadow-thin" horizontalAlignment="0" verticalAlignment="1">
+		<!--		<Button name="AM_ScrollListRowElement" virtual="true" clickSound="Click" font="$(BOLD_FONT)|18|soft-shadow-thin" horizontalAlignment="0" verticalAlignment="1">
             <Dimensions x="292" y="30" />
             <Anchor point="TOPLEFT" relativeTo="$(parent)" anchorPoint="TOPLEFT" offsetX="4" />
 			<FontColors normalColor="75BDC2" mouseOverColor="FFFFFF" pressedColor="FFFFFF" />
@@ -148,7 +166,7 @@
 			<Controls>
 				<Texture name="$(parent)_Thumbnail" textureFile="">
 					<Dimensions x="24" y="24" />
-					<Anchor point="LEFT" relativeTo="$(parent)" anchorPoint="LEFT" offsetX="4"  />
+					<Anchor point="LEFT" relativeTo="$(parent)" anchorPoint="LEFT" offsetX="4" />
 				</Texture>
 				<Button name="$(parent)_DeleteButton" clickSound="Click">
 					<Dimensions x="24" y="24" />
@@ -157,10 +175,10 @@
 				</Button>
             </Controls>
         </Button>-->
-		
+
 		<Control name="AM_ScrollListRowElement" virtual="true" mouseEnabled="true" clickSound="Click" font="$(BOLD_FONT)|18|soft-shadow-thin" horizontalAlignment="0" verticalAlignment="1">
-            <Dimensions x="292" y="30" />
-            <Anchor point="TOPLEFT" relativeTo="$(parent)" anchorPoint="TOPLEFT" offsetX="4" />
+			<Dimensions x="292" y="30" />
+			<Anchor point="TOPLEFT" relativeTo="$(parent)" anchorPoint="TOPLEFT" offsetX="4" />
 			<OnMouseEnter>
 				ZO_ScrollList_MouseEnter(AM_ScrollList, self)
 			</OnMouseEnter>
@@ -180,7 +198,7 @@
 				</Label>
 				<Texture name="$(parent)_Thumbnail" textureFile="">
 					<Dimensions x="24" y="24" />
-					<Anchor point="LEFT" relativeTo="$(parent)" anchorPoint="LEFT" offsetX="4"  />
+					<Anchor point="LEFT" relativeTo="$(parent)" anchorPoint="LEFT" offsetX="4" />
 				</Texture>
 				<Button name="$(parent)_VisibilityButton" clickSound="Click">
 					<Dimensions x="32" y="32" />
@@ -192,13 +210,13 @@
 					<Anchor point="RIGHT" relativeTo="$(parent)" anchorPoint="RIGHT" />
 					<Textures normal="EsoUI/Art/Buttons/decline_up.dds" mouseOver="EsoUI/Art/Buttons/decline_over.dds" pressed="EsoUI/Art/Buttons/decline_down.dds" />
 				</Button>
-            </Controls>
-        </Control>
+			</Controls>
+		</Control>
 
 		<!-- Aura Groups List Entry -->
 		<Control name="AM_AuraGroupsScrollListRowElement" virtual="true" font="$(BOLD_FONT)|18|soft-shadow-thin" horizontalAlignment="0" verticalAlignment="1">
-            <Dimensions x="292" y="30" />
-            <Anchor point="TOPLEFT" relativeTo="$(parent)" anchorPoint="TOPLEFT" offsetX="4" />
+			<Dimensions x="292" y="30" />
+			<Anchor point="TOPLEFT" relativeTo="$(parent)" anchorPoint="TOPLEFT" offsetX="4" />
 			<Controls>
 				<Label name="$(parent)_Label" font="$(BOLD_FONT)|14|soft-shadow-thin" color="FFFFFF">
 					<Anchor point="LEFT" relativeTo="$(parent)" relativePoint="LEFT" offsetX="4" />
@@ -227,9 +245,9 @@
 						ClearTooltip(InformationTooltip)
 					</OnMouseExit>
 				</Button>
-            </Controls>
-        </Control>		
-		
+			</Controls>
+		</Control>
+
 		<!-- Action result list entry -->
 		<Control name="AM_ActionResultsListRowElement" virtual="true" inherits="AM_TriggerControl">
 			<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" />
@@ -238,11 +256,11 @@
 				</Button>
 			</Controls>
 		</Control>
-		
+
 		<!-- Icon aura -->
 		<Control name="AM_IconAuraControl" virtual="true" clampedToScreen="true">
 			<!--<Anchor point="TOPLEFT" relativeTo="AuraMasteryTLW" anchorPoint="TOPLEFT" />-->
-			<Controls>			
+			<Controls>
 				<Backdrop name="$(parent)_Backdrop">
 					<AnchorFill />
 				</Backdrop>
@@ -258,7 +276,7 @@
 				</Texture>
 			</Controls>
 		</Control>
-		
+
 		<!-- Progression bar aura -->
 		<Control name="AM_ProgressBarAuraControl" virtual="true" clampedToScreen="true">
 			<Anchor point="TOPLEFT" relativeTo="AuraMasteryTLW" anchorPoint="TOPLEFT" />
@@ -278,8 +296,8 @@
 					<Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" anchorPoint="BOTTOMRIGHT" offsetX="-2" offsetY="-2" />
 				</Label>
 			</Controls>
-		</Control>		
-		
+		</Control>
+
 		<!-- Loading conditions ability list row element -->
 		<Control name="AM_AbilityRow" virtual="true">
 			<Dimensions x="100" y="28" />
@@ -294,6 +312,6 @@
 				</Button>
 			</Controls>
 		</Control>
-		
+
 	</Controls>
 </GuiXml>

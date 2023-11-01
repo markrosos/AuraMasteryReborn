@@ -454,7 +454,8 @@
 									<Dimensions x="550" y="28" />
 									<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetY="36" />
 									<Controls>
-										<Control name="$(parent)_ScrollableComboBox" inherits="AM_ScrollableComboBox" tier="2">
+										<!-- <Control name="$(parent)_ScrollableComboBox" inherits="AM_ScrollableComboBox" tier="2"> -->
+										<Control name="$(parent)_ComboBox" inherits="AM_ComboBox" tier="2">
 											<Dimensions x="420" y="28" />
 											<Anchor point="RIGHT" relativeTo="$(parent)" relativePoint="RIGHT" offsetY="1" offsetX="1" />
 										</Control>
@@ -471,7 +472,8 @@
 									<Dimensions x="550" y="28" />
 									<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetY="120" />
 									<Controls>
-										<Control name="$(parent)_ScrollableComboBox" inherits="AM_ScrollableComboBox" tier="2">
+										<!-- <Control name="$(parent)_ScrollableComboBox" inherits="AM_ScrollableComboBox" tier="2"> -->
+										<Control name="$(parent)_ComboBox" inherits="AM_ComboBox" tier="2">
 											<Dimensions x="420" y="28" />
 											<Anchor point="RIGHT" relativeTo="$(parent)" relativePoint="RIGHT" offsetY="1" offsetX="1" />
 										</Control>

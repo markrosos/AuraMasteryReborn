@@ -1,8 +1,8 @@
 ﻿## Title: AuraMastery
 ## Description: This addon displays auras (icons, progression bars, textures, text labels, etc.) based on player defined conditions.
-## Author: Letho
-## Version: 1.20
-## APIVersion: 100029 10030
+## Author: Letho, Ecru
+## Version: 1.21
+## APIVersion: 101040
 ## DependsOn: LibStub LibAddonMenu-2.0
 ## OptionalDependsOn: AceSerializer-3.0
 ## SavedVariables: AuraMasterySavedVariables

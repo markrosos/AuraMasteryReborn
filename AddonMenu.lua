@@ -328,7 +328,8 @@ end
 
 -- Trigger actions
 function AuraMastery:InitTriggerSoundsComboBox()
-	local control = WM:GetControlByName("AuraMasteryAuraActionsWindow_DisplayContainer_Sounds_TriggerActions_ScrollableComboBox")
+	-- local control = WM:GetControlByName("AuraMasteryAuraActionsWindow_DisplayContainer_Sounds_TriggerActions_ScrollableComboBox")
+	local control = WM:GetControlByName("AuraMasteryAuraActionsWindow_DisplayContainer_Sounds_TriggerActions_ComboBox")
 	local m_comboBox = control.m_comboBox
 	local itemSelectCallback = AuraMastery.TriggerSoundSelectCallback
 	local index = 1
@@ -346,7 +347,8 @@ function AuraMastery:InitTriggerSoundsComboBox()
 end
 
 function AuraMastery:InitUntriggerSoundsComboBox()
-	local control = WM:GetControlByName("AuraMasteryAuraActionsWindow_DisplayContainer_Sounds_UntriggerActions_ScrollableComboBox")
+	-- local control = WM:GetControlByName("AuraMasteryAuraActionsWindow_DisplayContainer_Sounds_UntriggerActions_ScrollableComboBox")
+	local control = WM:GetControlByName("AuraMasteryAuraActionsWindow_DisplayContainer_Sounds_UntriggerActions_ComboBox")
 	local m_comboBox = control.m_comboBox
 	local itemSelectCallback = AuraMastery.UntriggerSoundSelectCallback
 	local index = 1
@@ -1699,7 +1701,8 @@ end
 
 function AuraMastery.UpdateTriggerSoundSelect()
 	local auraName = AuraMastery.activeAura
-	local control = AuraMasteryAuraActionsWindow_DisplayContainer_Sounds_TriggerActions_ScrollableComboBox
+	-- local control = AuraMasteryAuraActionsWindow_DisplayContainer_Sounds_TriggerActions_ScrollableComboBox
+	local control = AuraMasteryAuraActionsWindow_DisplayContainer_Sounds_TriggerActions_ComboBox
 	local m_comboBox = control.m_comboBox
 	local preSelectionItemText = AuraMastery.svars.auraData[auraName].triggerSound or "AA_NONE"
 	control.m_comboBox:SetSelectedItemFont("$(BOLD_FONT)|14|soft-shadow-thin")
@@ -1708,7 +1711,8 @@ end
 
 function AuraMastery.UpdateUntriggerSoundSelect()
 	local auraName = AuraMastery.activeAura
-	local control = WM:GetControlByName("AuraMasteryAuraActionsWindow_DisplayContainer_Sounds_UntriggerActions_ScrollableComboBox")
+	-- local control = WM:GetControlByName("AuraMasteryAuraActionsWindow_DisplayContainer_Sounds_UntriggerActions_ScrollableComboBox")
+	local control = WM:GetControlByName("AuraMasteryAuraActionsWindow_DisplayContainer_Sounds_UntriggerActions_ComboBox")
 	local m_comboBox = control.m_comboBox
 	local preSelectionItemText = AuraMastery.svars.auraData[auraName].untriggerSound or "AA_NONE"
 	control.m_comboBox:SetSelectedItemFont("$(BOLD_FONT)|14|soft-shadow-thin")
